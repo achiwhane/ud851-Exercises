@@ -15,6 +15,7 @@
  */
 package com.example.android.datafrominternet;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import com.example.android.datafrominternet.utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,19 +58,36 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        String githubSearchResults = null;
-        try {
-            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
-            mSearchResultsTextView.setText(githubSearchResults);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         // TODO (4) Create a new GithubQueryTask and call its execute method, passing in the url to query
+
+        GithubQueryTask githubQueryTask = new GithubQueryTask();
+        githubQueryTask.execute(githubSearchUrl);
     }
 
-    // TODO (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
-    // TODO (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
-    // TODO (3) Override onPostExecute to display the results in the TextView
+    // DONE (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
+    // DONE (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
+    // DONE (3) Override onPostExecute to display the results in the TextView
+
+    public class GithubQueryTask extends AsyncTask<URL, Void, String> {
+        @Override
+        protected String doInBackground(URL... urls) {
+            // > inb4 bad style -- only one URL for now so we can do this
+            URL url = urls[0];
+
+            String searchResults = null;
+            try {
+                searchResults = NetworkUtils.getResponseFromHttpUrl(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return searchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            mSearchResultsTextView.setText(s);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
