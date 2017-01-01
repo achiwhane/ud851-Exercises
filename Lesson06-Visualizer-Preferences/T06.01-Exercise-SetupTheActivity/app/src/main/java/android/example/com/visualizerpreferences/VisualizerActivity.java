@@ -17,6 +17,8 @@ package android.example.com.visualizerpreferences;
  */
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.example.com.visualizerpreferences.AudioVisuals.AudioInputReader;
 import android.example.com.visualizerpreferences.AudioVisuals.VisualizerView;
@@ -25,9 +27,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 public class VisualizerActivity extends AppCompatActivity {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     private static final int MY_PERMISSION_RECORD_AUDIO_REQUEST_CODE = 88;
     private VisualizerView mVisualizerView;
@@ -115,14 +124,45 @@ public class VisualizerActivity extends AppCompatActivity {
         }
     }
 
-    // TODO (1) Create a new Empty Activity named SettingsActivity; make sure to generate the
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.visualizer_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.visualizer_menu_item:
+                Log.d(TAG, "settings clicked");
+                openSettingsActivity();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void openSettingsActivity() {
+
+        Context parentContext = this;
+        Class targetActivity = SettingsActivity.class;
+
+        Intent intent = new Intent(this, targetActivity);
+        startActivity(intent);
+    }
+    // DONE (1) Create a new Empty Activity named SettingsActivity; make sure to generate the
     // activity_settings.xml layout file as well and add the activity to the manifest
 
-    // TODO (2) Add a new resource folder called menu and create visualizer_menu.xml
-    // TODO (3) In visualizer_menu.xml create a menu item with a single item. The id and title
+    // DONE (2) Add a new resource folder called menu and create visualizer_menu.xml
+    // DONE (3) In visualizer_menu.xml create a menu item with a single item. The id and title
     // should be saved in strings.xml, it should never be shown as an action,
     // orderInCategory should be 100
 
-    // TODO (5) Add the menu to the menu bar
-    // TODO (6) When the "Settings" menu item is pressed, open SettingsActivity
+    // DONE (5) Add the menu to the menu bar
+    // DONE (6) When the "Settings" menu item is pressed, open SettingsActivity
 }
